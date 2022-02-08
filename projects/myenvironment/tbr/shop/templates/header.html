@@ -1,0 +1,19 @@
+{% load staticfiles %}
+<header>
+	<center>
+		{% comment %} <img src="{% static 'img/tbr_logo.png' %}" alt="Chat To Me Store"> <!-- initial version --> {% endcomment %}
+
+		<!-- logo photo -->
+
+{% comment %} 
+		<!-- go to /shop ver-->
+    	<a href="{% url 'shop:allProdCat' %}"><img src="{% static 'img/tbr_logo.png' %}" alt="Chat To Me Store">
+ {% endcomment %}
+
+
+
+		<!-- go to /main ver-->
+    	<a href=".."><img src="{% static 'img/tbr_logo.png' %}" alt="Chat To Me Store">
+	
+	</center>
+</header>-

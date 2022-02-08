@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block metadescription %}
+	This is the shopping cart page. Proceed to review your items and place the order.
+{% endblock %}
+{% block title %}
+	Cart - Chat To Me Store
+{% endblock %}
+{% block content %}
+	{% if not cart_items %} <!-- check if there are no cart items in shopping cart -->
+		<div>
+			<div class="text-center">
+				<br>
+				<h1 class="text-center my_title">
+					Your shopping cart is empty
+				</h1>
+				<br>
+				<p class="text-center">
+					Please click <a href="{% url 'shop:allProdCat' %}">here</a> to continue shopping.
+				</p>
+			</div>
+		</div>
+	{% else %}
+		<div>
+			<div class="text-center">
+				<br>
+				<h1 class="text-center my_title">
+					Your shopping cart
+				</h1>
+				<br>
+			</div>
+		</div>
+		<div class="row mx-auto">
+			<div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+				<table class="table my_custom_table">
+					<thead class="my_custom_thead">
+						<tr>
+							<th colspan="5">
+								Your items
+							</th>
+						</tr>
+						
+					</thead>
+					<tbody>
+						{% for cart_item in cart_items %} <!-- card _items is from cart\views.py-->
+							<tr>
+								<td>
+									<a href="{{cart_item.product.get_absolute_url}}"><img src="{{cart_item.product.image.url}}" alt="" class="float-left rounded custom_image"></a>
+								</td>
+								<td class="text-left">
+									{{cart_item.product.name}}
+									<br>
+									id: {{cart_item.product.id}}
+									<br>
+									SKU: {{cart_item.product.SKU}}
+									<br>
+									Unit Price: ${{cart_item.product.price}}
+									<br>
+									Qty: {{cart_item.quantity}} x ${{cart_item.product.price}} <!-- QTY x Price -->
+								</td>
+								<td>
+									${{cart_item.sub_total}}
+								</td>
+								{% if cart_item.quantity < cart_item.product.stock %} <!-- checking stock -->
+									<td>
+										{% comment %} <a href="{% url 'cart:add_cart' cart_item.product.id %}" class="custom_a"><i class="fas fa-plus-circle custom_icon"></i></a>&nbsp;<a href="" class="custom_a"><i class="fas fa-minus-circle custom_icon"></i></a>&nbsp;<a href="" class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a> {% endcomment %}
+										<a href="{% url 'cart:add_cart' cart_item.product.id %}" class="custom_a"><i class="fas fa-plus-circle custom_icon"></i></a>&nbsp;<a href="{% url 'cart:cart_remove' cart_item.product.id %}" class="custom_a"><i class="fas fa-minus-circle custom_icon"></i></a>&nbsp;<a href="{% url 'cart:full_remove' cart_item.product.id %}" class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a>
+									</td>
+								{% else %}
+									<td>
+										{% comment %} &nbsp;<a href="" class="custom_a"><i class="fas fa-minus-circle custom_icon"></i></a>&nbsp;<a href="" class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a> {% endcomment %}
+										&nbsp;<a href="{% url 'cart:cart_remove' cart_item.product.id %}" class="custom_a"><i class="fas fa-minus-circle custom_icon"></i></a>&nbsp;<a href="{% url 'cart:full_remove' cart_item.product.id %}" class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a>
+									</td>
+									<td></td>
+								{% endif %}
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				
+			</div>
+			<div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+				<table class="table my_custom_table">
+					<thead class="my_custom_thead">
+						<tr>
+							<th>
+								Checkout
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								Please review your shopping cart items before proceeding with the order payment.
+							</td>
+						</tr>
+						<tr>
+							<td class="text-left">
+								Your total is: <strong>${{ total }}</strong>
+							</td>
+						</tr>
+					</tbody>
+
+
+				</table> 
+				
+				<!--  'Pay with Card button'  -->
+				<div class="mx-auto">
+
+					<!-- Stripe attributes in html -->
+					<form action="" method="POST">
+						{% csrf_token %}
+					  <script
+					    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+					    data-key="{{ data_key }}"
+					    data-amount="{{ stripe_total }}"
+					    data-name="Chat To Me" # show shop name
+					    data-description="{{ description }}"
+					    data-image="{% static 'img/tbr_logo.png' %}"
+					    data-locale="auto"
+					    data-currency="gbp"
+					    data-shipping-address="true"
+					    data-billing-address="true"
+					    data-zip-code="true">
+					  </script>
+					</form>	
+
+
+					<!-- 'Continue Shopping button' : go to allProdCat in shop/views.py-->			
+					<a href="{% url 'shop:allProdCat' %}" class="btn btn-secondary btn-block my_custom_button">Continue Shopping</a>
+				
+				</div>
+
+
+				<!--  'Pay By Cash button'  -->
+				<div class="mx-auto">
+
+					<form action="{% url 'cart:cart_detail_cash' %}" method="POST">	
+						{% csrf_token %}									
+						<div class="modal fade" id="modalContactForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header text-center">
+							<h4 class="modal-title w-100 font-weight-bold">CHAT TO ME</h4>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							</div>
+							<div class="modal-body mx-3">
+							<div class="md-form mb-5">
+								<i class="fas fa-user prefix grey-text"></i>
+								<input type="text" name="customerName" id="customerName" class="form-control validate">
+								<label data-error="wrong" data-success="right" for="customerName">Your name</label>
+							</div>
+					
+							<div class="md-form mb-5">
+								<i class="fas fa-envelope prefix grey-text"></i>
+								<input type="email" name="customerEmail" id="customerEmail" class="form-control validate">
+								<label data-error="wrong" data-success="right" for="customerEmail">Your email</label>
+							</div>
+							{% comment %} 
+					
+							<div class="md-form mb-5">
+								<i class="fas fa-tag prefix grey-text"></i>
+								<input type="text" id="form32" class="form-control validate">
+								<label data-error="wrong" data-success="right" for="form32">Subject</label>
+							</div>
+					
+							<div class="md-form">
+								<i class="fas fa-pencil prefix grey-text"></i>
+								<textarea type="text" id="form8" class="md-textarea form-control" rows="4"></textarea>
+								<label data-error="wrong" data-success="right" for="form8">Your message</label>
+							</div>
+							{% endcomment %}
+					
+							</div>
+							<div class="modal-footer d-flex justify-content-center">
+							<button class="btn btn-unique">Pay <i class="fas fa-paper-plane-o ml-1"></i></button>
+							</div>
+						</div>
+						</div>
+					</div>
+					
+					<div class="text-center">
+						<a href="" class="btn btn-secondary btn-block my_custom_button" data-toggle="modal" data-target="#modalContactForm">Pay By Cash</a>
+					</div>
+
+
+					</form>
+				
+				</div>
+
+
+			</div>
+		</div>
+		<br>
+	{% endif %}
+{% endblock %}

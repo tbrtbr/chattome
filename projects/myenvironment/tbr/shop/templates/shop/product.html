@@ -1,0 +1,76 @@
+{% extends "base.html" %} <!-- in order to get all the blocks and settings-->
+{% load staticfiles %}
+{% block metadescription %}
+	{{ product.description|truncatewords:155 }}
+{% endblock %}
+{% block title %}
+	{{ product.name }} - Chat To Me Store
+{% endblock %}
+
+{% comment %} 
+<!-- initial product.html in course 9-->
+{% block content %}
+	<div> <!-- defined in custom.css-->
+		<div>
+			<p><a href="{% url 'shop:allProdCat' %}">Home</a> | <a href="{{ product.category.get_url }}">{{product.category}}</a> | {{product.name}}</p> <!-- created in course 9-->
+		</div>
+		<div>
+			<br>
+			<div>
+				<div>
+					<div> 
+						<img src="{{product.image.url}}" alt="{{product.name}}">  <!-- created in course 9-->
+					</div>
+				</div>
+				<div>  <!-- create the second container-->
+					<div>
+						<h1>{{product.name}}</h1>
+						<p>${{product.price}}</p>
+						<p>Product Description</p>
+						<p>{{product.description}}</p>
+						{% if product.stock <= 0%}   <!-- check stock is 0-->
+							<p ><b>Out of Stock</b></p>
+						{% else %}
+							<a href="">Add to Cart</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %} {% endcomment %}
+
+
+
+
+{% block content %}  <!-- bulti in course 13 -->
+	<div class="row my_prod_row_class"> <!-- defined in custom.css-->
+		<div class="mx-auto">
+			<p><a href="{% url 'shop:allProdCat' %}">Home</a> | <a href="{{ product.category.get_url }}">{{product.category}}</a> | {{product.name}}</p> <!-- created in course 9-->
+		</div>
+		<div class="container">
+			<br>
+			<div class="row">
+				<div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+					<div style="min-width: 18rem;"> 
+						<img class="card-img-top my_image" src="{{product.image.url}}" alt="{{product.name}}">  <!-- created in course 9-->
+					</div>
+				</div>
+				<div class="col-12 col-sm-12 col-md-12 col-lg-6">  <!-- create the second container-->
+					<div>
+						<h1 class="my_prod_title">{{product.name}}</h1>
+						<p>${{product.price}}</p>
+						<p class="my_title">Product Description</p>
+						<p class="text-justify my_prod_text">{{product.description}}</p>
+						{% if product.stock <= 0%}
+							<p class="text-justify my_prod_text"><b>Out of Stock</b></p>
+						{% else %}
+							{% comment %} <a href="">Add to Cart</a> {% endcomment %}
+							<a class="btn btn-secondary" href="{% url 'cart:add_cart' product.id %}">Add to Cart</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %} 

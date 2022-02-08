@@ -1,0 +1,59 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+
+      <!-- if the word shop in the requested path then the active class will add to the webpage, it is to verify the word shop in the path -->
+      <!-- then there will be a "Shop" drop down link in Navbar-->
+      <li class="nav-item dropdown {% if 'shop' in request.path %}active{% endif %}"> 
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Shop
+        </a>
+
+        <!-- Add All products and categories to shop dropdown-->
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'shop:allProdCat' %}">All Products</a> <!-- show "All Products" under Shop dropdown -->
+
+          <!-- Add a for loop for generating the other categories to the shop dropdown-->
+          {% for cat in links %} <!--  for loop -->
+          <a class="dropdown-item" href="{{cat.get_url}}">{{cat.name}}</a>
+          {% endfor %}
+        </div>
+      </li>
+
+      <!-- add Your Cart to the Navbar-->      
+      <li class="nav-item">
+          <a class="nav-link" href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart"></i>({{item_count}})</a>
+      </li>
+    </ul>
+
+
+    <!-- Search component -->
+    <form class="form-inline my-2 my-lg-0" action="{% url 'search_app:searchResult' %}" method="get"> <!-- the search method -->
+      {% csrf_token %}
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q"> <!-- if missing the name q, the search content will always be 'none'-->
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
+    </form>
+  </div>
+</nav>
+
+
+
+<!-- first version of the navbar
+<nav>
+
+    <ul>
+        <li><a href="{% url 'shop:allProdCat' %}">All Products</a></li>
+
+        {% for cat in links %} 
+          <li><a href="{{cat.get_url}}">{{cat.name}}</a></li>
+          {% endfor %}
+
+
+        <li>Your Cart()</li>
+
+    </ul>
+</nav> -->

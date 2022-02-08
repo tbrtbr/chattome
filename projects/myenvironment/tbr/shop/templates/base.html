@@ -1,0 +1,53 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="{% block metadescription %}{% endblock %}">
+
+	<!-- bootstrap code setup course 10 -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> <!--  choosing the right fonts -->
+	<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"> <!-- add bootstrap css -->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/fontawesome-all.min.css' %}"> <!-- add fontawesome -->
+
+
+	<!--  Title -->
+	<title>{% block title %}{% endblock %}</title> 
+
+
+</head>
+<body>
+	 {% comment %} <div>
+		<!-- load basic html component -->
+    	{% include 'header.html' %}
+		{% include 'navbar.html' %}
+		{% block content %}
+		{% endblock %}
+    </div>
+		{% include 'footer.html' %} {% endcomment %}
+
+
+
+    <div class="container">
+
+		<!-- add sign / register icon -->
+		<div class="container-fluid bg-light navbar-fixed-top my_top_navbar_div">
+			{% include 'top-navbar.html' %}
+		</div>
+
+		<!-- load basic html component -->
+    	{% include 'header.html' %}
+		{% include 'navbar.html' %}
+		{% block content %}
+		{% endblock %}
+    </div>
+		{% include 'footer.html' %}
+	
+	<!-- JS code setup course 10 -->
+	<script src="{% static 'js/jquery-3.5.1.slim.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>
